@@ -1,0 +1,157 @@
+---
+title: "PRUEBAS PRE 3ER PARCIAL"
+author: "Luis Damián García"
+date: "3/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Se realizaran algunas gráficas que nos permitan obtener datos de interés.
+Todas las gráficas se harán con la base de datos curada o con algun subset de la misma.
+
+
+```{r}
+#Lo primero que haremos será crear una nueva columna llamada "Porcentaje" relacionada directamente a la cantidad de suicidios en cierto año, género y rango de edad con la población total con los mismos criterios
+
+db_suicide <- read.csv("Basecurada_eq1")
+  
+  db_suicide["Porcentaje"] <- db_suicide$No.de.suicidios / db_suicide$Población * 100
+  
+#También cambiaremos los datos marcados como 5-14 years de la variable edad por 05-14 years
+  library(stringi)
+    db_suicide$Edad <- stri_replace_all(str = db_suicide$Edad, regex = "5-14 years", replacement = "05-14 years")
+    
+
+#Visualizamos si los cambios se realizaron correctamente
+  
+    View(db_suicide)
+
+```
+
+
+Comenzaremos con las gráficas
+```{r}
+#Nuestra primera gráfica será para comparar la cantidad total de suicidios en hombres y mujeres
+
+library(ggplot2)
+ggplot(db_suicide, aes(x=No.de.suicidios, y=Sexo)) + 
+  geom_bar(stat = "identity", width = 0.5) +
+  
+  + coord_flip()
+
+```
+
+```{r}
+library(ggplot2)
+library(hrbrthemes)
+library(dplyr)
+library(tidyr)
+library(viridis)
+
+#Graficamos con el tipo de gráfica violin. tomando como máximo número de suicidios de suicidios, y último año 2015.
+ggplot(db_suicide, aes(x=No.de.suicidios, group=Año, fill=Año, y=Año, xend(2000), yend(2015))) +
+  geom_violin(adjust=1.5, alpha=0.4)+
+
+  theme_get()
+```
+
+```{r}
+library(ggplot2)
+#Graficamos
+ggplot(db_suicide, aes(fill=Sexo, y= No.de.suicidios, x=Edad))+ geom_bar(position ="dodge", stat ="identity", width = 0.5)
+  
+```
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(hrbrthemes)
+
+db.5.a.14 <- subset(db_suicide, Edad=="05-14 years")
+
+db.5.a.14 %>%
+  ggplot(aes(x=Año, y=Porcentaje, group=Sexo, color=Sexo)) +
+    geom_line() +
+    scale_color_viridis(discrete = TRUE) +
+    ggtitle("Porcentaje de suicidios a lo largo del tiempo en el primer rango de edad")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(hrbrthemes)
+
+db.15.a.24 <- subset(db_suicide, Edad=="15-24 years")
+
+db.15.a.24 %>%
+  ggplot(aes(x=Año, y=Porcentaje, group=Sexo, color=Sexo)) +
+    geom_line() +
+    scale_color_viridis(discrete = TRUE) +
+    ggtitle("Porcentaje de suicidios a lo largo del tiempo en el segundo rango de edad")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(hrbrthemes)
+
+db.25.a.34 <- subset(db_suicide, Edad=="25-34 years")
+
+db.25.a.34 %>%
+  ggplot(aes(x=Año, y=Porcentaje, group=Sexo, color=Sexo)) +
+    geom_line() +
+    scale_color_viridis(discrete = TRUE) +
+    ggtitle("Porcentaje de suicidios a lo largo del tiempo en el tercer rango de edad")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(hrbrthemes)
+
+db.55.a.74 <- subset(db_suicide, Edad=="55-74 years")
+
+db.55.a.74 %>%
+  ggplot(aes(x=Año, y=Porcentaje, group=Sexo, color=Sexo)) +
+    geom_line()  +
+    ggtitle("Porcentaje de suicidios a lo largo del tiempo en el quinto rango de edad")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(hrbrthemes)
+
+db.35.a.54 <- subset(db_suicide, Edad=="35-54 years")
+
+db.35.a.54 %>%
+  ggplot(aes(x=Año, y=Porcentaje, group=Sexo, color=Sexo)) +
+    geom_line() +
+    scale_color_viridis(discrete = TRUE) +
+    ggtitle("Porcentaje de suicidios a lo largo del tiempo en el cuarto rango de edad")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(hrbrthemes)
+
+db.mas.75 <- subset(db_suicide, Edad=="75+ years")
+
+db.mas.75 %>%
+  ggplot(aes(x=Año, y=Porcentaje, group=Sexo, color=Sexo)) +
+    geom_line() +
+    scale_color_viridis(discrete = TRUE) +
+    ggtitle("Porcentaje de suicidios a lo largo del tiempo en el primer rango de edad")
+```
+
